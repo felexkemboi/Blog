@@ -5,6 +5,7 @@ from django.urls import resolve
 from django.test import TestCase
 from .views import signup
 from django.contrib.auth.models import User
+from .forms import SignUpForm
 
 
 class SignUpTests(TestCase):
@@ -24,13 +25,23 @@ class SignUpTests(TestCase):
 
     def test_contains_form(self):
         form = self.response.context.get('form')
-        self.assertIsInstance(form, UserCreationForm)
+        self.assertIsInstance(form, SignUpForm)
+    def test_form_inputs(self):
+        '''
+        The view must contain five inputs: csrf, username, email,
+        password1, password2
+        '''
+        self.assertContains(self.response, '<input', 5)
+        self.assertContains(self.response, 'type="text"', 1)
+        self.assertContains(self.response, 'type="email"', 1)
+        self.assertContains(self.response, 'type="password"', 2)
 
 class SuccessfulSignUpTests(TestCase):
     def setUp(self):
         url = reverse('signup')
         data = {
             'username': 'john',
+            'email':'john@doe',
             'password1': 'abcdef123456',
             'password2': 'abcdef123456'
         }
@@ -69,7 +80,7 @@ class SuccessfulSignUpTests(TestCase):
 		self.home_url = reverse('home')
 
 	def test_redirection(self):
-		"""A valid form submission should redirect  the user to the homepage"""
+		"""A valid form submissssion should redirect  the user to the homepage"""
 		self.assertRedirects(self.response,self.home_url)
 
 	def test_user_creation(self):
@@ -79,7 +90,7 @@ class SuccessfulSignUpTests(TestCase):
 		"""the resulting response should have a 'user' to its context after a successfull sign up"""
 		response = self.client.get(self.home_url)
 		user = response.context.get('user')
-		self.assertFalse(user.is_authenticated)
+		self.assertTrue(user.is_authenticated)
 class InvalidSignUpTests(TestCase):
     def setUp(self):
         url = reverse('signup')
