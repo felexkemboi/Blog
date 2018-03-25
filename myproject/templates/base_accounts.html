@@ -1,7 +1,9 @@
-{% extends 'base.hmtl'%}
+{% extends 'base.html'%}
+
 {% load static %}
+
 {% block stylesheet %}
-<link rel="stylesheet"  href="{% 'css/accounts.html' %}">
+<link rel="stylesheet"  href="{% static 'css/accounts.html' %}">
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -9,6 +11,8 @@
 		<a href="{% url 'home' %}">Django Boards</a>
 	</h1>
 {% block content %}
+<!-- Body goes here-->
+
 {% endblock %}
 </div>
 {% endblock %}
