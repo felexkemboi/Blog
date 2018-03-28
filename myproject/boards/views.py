@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.utils import timezone
 from django.views.generic import UpdateView
+from django.utils.decorators import method_decorator 
 
 
 
@@ -64,6 +65,7 @@ def reply_topic(request, pk, topic_pk):
         form = PostForm()
     return render(request, 'reply_topic.html', {'topic': topic, 'form': form})
 
+@method_decorator(login_required,name='dispatch')
 class PostUpdateView(UpdateView):
     model = Post
     fields = ('message',)
