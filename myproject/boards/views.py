@@ -70,6 +70,12 @@ class PostUpdateView(UpdateView):
     model = Post
     fields = ('message',)
     template_name = 'edit_post.html'
+    pk_url_kwarg = 'post_pk'
+    context_objec_name ='post'
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(created_by=self.request.user)
 
     def form_valid(self,form):
         post = form.save(commit=False)
